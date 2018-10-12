@@ -32,7 +32,7 @@ function(AddTargetToGroup p_target_name p_group_name)
 	
 	if((${target_type} STREQUAL "INTERFACE_LIBRARY") AND ("${${p_target_name}_CC_CREATED}" STREQUAL "TRUE")) # HEADERONLY Library
 		
-		if(${${p_library_name}_CC_CREATED})
+		if(${${p_target_name}_CC_CREATED})
 		
 			set_target_properties(${p_target_name}_ide PROPERTIES FOLDER ${p_group_name})
 			
