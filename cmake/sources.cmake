@@ -1,3 +1,7 @@
+#########################################################################
+## Copyright (c) 2018 Alastair Holmes. All rights reserved.
+#########################################################################
+
 # AddSourcesToTarget(p_target_name):
 	# Adds sources to target, similiar to CMake's target_sources().
 	# Parameters:
