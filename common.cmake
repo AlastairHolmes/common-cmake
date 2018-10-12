@@ -1,3 +1,7 @@
+#########################################################################
+## Copyright (c) 2018 Alastair Holmes. All rights reserved.
+#########################################################################
+
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/utility.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/version.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/targets.cmake)

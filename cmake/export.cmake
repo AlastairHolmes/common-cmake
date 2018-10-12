@@ -1,3 +1,7 @@
+#########################################################################
+## Copyright (c) 2018 Alastair Holmes. All rights reserved.
+#########################################################################
+
 include(CMakeParseArguments)
 include(CMakePackageConfigHelpers)
 
@@ -7,10 +11,10 @@ set(CC_EXPORT_DEFAULT_CONFIG_FILE "${CMAKE_CURRENT_LIST_DIR}/default_export_conf
 # SetupExport: Prepares a target group for installing
 	# This must called before calling InstallExport, and must only be called once for a particular INSTALL_POSTFIX
 	# Options:
-		# INSTALL_POSTFIX (Optional, Default Value: lib/cmake/${p_target_group})
+		# INSTALL_POSTFIX (Optional, Default Value: lib/cmake/${p_export_name})
 			# Controls the directory to which target group is installed.
 		# VERSION (Optional)
-			# If specified will install a ${p_target_group}ConfigVersion.cmake file using the COMPATIBILITY specified
+			# If specified will install a ${p_export_name}ConfigVersion.cmake file using the COMPATIBILITY specified
 				# This allows the version to be checked when importing your target.
 					# E.g. find_package(Project 1.0.5 REQUIRED)
 						# If Project was installed using the VERSION option 1.0.4 and COMPATIBILITY was 'ExactVersion'
@@ -27,7 +31,7 @@ set(CC_EXPORT_DEFAULT_CONFIG_FILE "${CMAKE_CURRENT_LIST_DIR}/default_export_conf
 				# This means the targets in the target group 'TargetGroupExample' depend on Boost and Lua, but only definitely needs Boost.
 				# See CMake find_dependency() documentation.
 			
-function(SetupExport p_target_group)
+function(SetupExport p_export_name)
 	
 	# Parsing Arguments
 	
@@ -39,36 +43,36 @@ function(SetupExport p_target_group)
 	# Argument Checks
 	
 	if(NOT DEFINED SetupExportCC_INSTALL_POSTFIX)
-		set(SetupExportCC_INSTALL_POSTFIX "lib/cmake/${p_target_group}")
+		set(SetupExportCC_INSTALL_POSTFIX "lib/cmake/${p_export_name}")
 	elseif(IS_ABSOLUTE "${SetupExportCC_INSTALL_POSTFIX}")
-		message(FATAL_ERROR "SetupExport(p_target_group): INSTALL_POSTFIX option must be a relative path.")
+		message(FATAL_ERROR "SetupExport(p_export_name): INSTALL_POSTFIX option must be a relative path.")
 	endif()
 	
 	if(DEFINED SetupExportCC_VERSION)
 		if(NOT DEFINED SetupExportCC_COMPATIBILITY)
-			message(FATAL_ERROR "SetupExport(p_target_group): If VERSION option is given, you must provide the COMPATIBILITY option.")
+			message(FATAL_ERROR "SetupExport(p_export_name): If VERSION option is given, you must provide the COMPATIBILITY option.")
 		elseif(NOT ${SetupExportCC_COMPATIBILITY} MATCHES "^(AnyNewerVersion)|(SameMajorVersion)|(ExactVersion)$")
-			message(FATAL_ERROR "SetupExport(p_target_group): COMPATIBILITY must be AnyNewerVersion, SameMajorVersion, or ExactVersion.")
+			message(FATAL_ERROR "SetupExport(p_export_name): COMPATIBILITY must be AnyNewerVersion, SameMajorVersion, or ExactVersion.")
 		endif()
 	else()
 		if(DEFINED SetupExportCC_COMPATIBILITY)
-			message(AUTHOR_WARNING "SetupExport(p_target_group): If VERSION option is not provided, COMPATIBILITY option is ignored.")
+			message(AUTHOR_WARNING "SetupExport(p_export_name): If VERSION option is not provided, COMPATIBILITY option is ignored.")
 		endif()
 	endif()
 	
 	if(DEFINED SetupExportCC_DEPENDENCY_FILE)
 		if((NOT IS_ABSOLUTE ${SetupExportCC_DEPENDENCY_FILE}) OR (NOT EXISTS ${SetupExportCC_DEPENDENCY_FILE}))
-			message(FATAL_ERROR "SetupExport(p_target_group): DEPENDENCY_FILE must be an absolute path to an existing file.")
+			message(FATAL_ERROR "SetupExport(p_export_name): DEPENDENCY_FILE must be an absolute path to an existing file.")
 		endif()
-		set(CC_ExportTargetGroup_UseDependencyFile TRUE)
+		set(UseDependencyFile TRUE)
 	elseif()
-		set(CC_ExportTargetGroup_UseDependencyFile FALSE)
+		set(UseDependencyFile FALSE)
 	endif()
 	
 	if(DEFINED SetupExportCC_DEPENDENCIES)
-		set(CC_ExportTargetGroup_DependencyList "${SetupExportCC_DEPENDENCIES}")
+		set(DependencyList "${SetupExportCC_DEPENDENCIES}")
 	else()
-		set(CC_ExportTargetGroup_DependencyList "")
+		set(DependencyList "")
 	endif()
 	
 	# Create ConfigVersion.cmake File
@@ -79,7 +83,7 @@ function(SetupExport p_target_group)
 				
 				# Create ConfigVersion.cmake File
 
-					write_basic_package_version_file("${CMAKE_BINARY_DIR}/${SetupExportCC_INSTALL_POSTFIX}/${p_target_group}ConfigVersion.cmake"
+					write_basic_package_version_file("${CMAKE_BINARY_DIR}/${SetupExportCC_INSTALL_POSTFIX}/${p_export_name}ConfigVersion.cmake"
 						VERSION ${SetupExportCC_VERSION}
 						COMPATIBILITY ${SetupExportCC_COMPATIBILITY})
 			
@@ -88,26 +92,26 @@ function(SetupExport p_target_group)
 	# Create Dependencies.cmake File
 	
 		if(${CC_ExportTargetGroup_UseDependencyFile})
-			configure_file("${p_dependencies_file}" "${CMAKE_BINARY_DIR}/${SetupExportCC_INSTALL_POSTFIX}/${p_target_group}Dependencies.cmake" @ONLY)
+			configure_file("${p_dependencies_file}" "${CMAKE_BINARY_DIR}/${SetupExportCC_INSTALL_POSTFIX}/${p_export_name}Dependencies.cmake" @ONLY)
 		endif()
 		
 	# Create Config.cmake File
 	
-		set(CC_ExportTargetGroup_TargetGroupName "${p_target_group}")
-		configure_file("${CC_EXPORT_DEFAULT_CONFIG_FILE}" "${CMAKE_BINARY_DIR}/${SetupExportCC_INSTALL_POSTFIX}/${p_target_group}Config.cmake" @ONLY)
+		set(ExportName "${p_export_name}")
+		configure_file("${CC_EXPORT_DEFAULT_CONFIG_FILE}" "${CMAKE_BINARY_DIR}/${SetupExportCC_INSTALL_POSTFIX}/${p_export_name}Config.cmake" @ONLY)
 	
 endfunction()
 
-# InstallExport: Installs all the targets in the target group '${p_target_group}' to "${CMAKE_INSTALL_PREFIX}/${INSTALL_POSTFIX}"
+# InstallExport: Installs all the targets in the target group '${p_export_name}' to "${CMAKE_INSTALL_PREFIX}/${INSTALL_POSTFIX}"
 	# You must call SetupExport will the same INSTALL_POSTFIX option before this function.
 	# Options:
 		# EXCLUDE_FROM_ALL - See CMake Install Documentation
 		# NAMESPACE - See CMake Install Documentation
 		# COMPONENT - See CMake Install Documentation
 		# CONFIGURATIONS - See CMake Install Documentation
-		# INSTALL_POSTFIX (Optional, Default Value: lib/cmake/${p_target_group})
+		# INSTALL_POSTFIX (Optional, Default Value: lib/cmake/${p_export_name})
 			# Controls the directory to which target group is installed.		
-function(InstallExport p_target_group)
+function(InstallExport p_export_name)
 
 	# Parsing Arguments
 
@@ -137,9 +141,9 @@ function(InstallExport p_target_group)
 	endif()
 	
 	if(NOT DEFINED InstallExportCC_INSTALL_POSTFIX)
-		set(InstallExportCC_INSTALL_POSTFIX "lib/cmake/${p_target_group}")
+		set(InstallExportCC_INSTALL_POSTFIX "lib/cmake/${p_export_name}")
 	elseif(IS_ABSOLUTE "${InstallExportCC_INSTALL_POSTFIX}")
-		message(FATAL_ERROR "InstallExport(p_target_group): INSTALL_POSTFIX option must be a relative path.")
+		message(FATAL_ERROR "InstallExport(p_export_name): INSTALL_POSTFIX option must be a relative path.")
 	endif()
 	
 	if(DEFINED InstallExportCC_CONFIGURATIONS)
@@ -150,7 +154,7 @@ function(InstallExport p_target_group)
 	
 	# Install ConfigVersion.cmake File
 
-		install(FILES "${CMAKE_BINARY_DIR}/${InstallExportCC_INSTALL_POSTFIX}/${p_target_group}ConfigVersion.cmake"
+		install(FILES "${CMAKE_BINARY_DIR}/${InstallExportCC_INSTALL_POSTFIX}/${p_export_name}ConfigVersion.cmake"
 			${InstallExportCC_CONFIGURATIONS}
 			DESTINATION ${InstallExportCC_INSTALL_POSTFIX}
 			${InstallExportCC_COMPONENT}
@@ -161,18 +165,18 @@ function(InstallExport p_target_group)
 	# Install Dependencies.cmake and Config.cmake
 	
 		# Check Setup Called
-			if(NOT EXISTS "${CMAKE_BINARY_DIR}/${InstallExportCC_INSTALL_POSTFIX}/${p_target_group}Config.cmake") # Not Very Effective Check
-				message(FATAL_ERROR "InstallExport(p_target_group): Must call SetupExport(p_target_group) with equal INSTALL_POSTFIX option before calling InstallExport(p_target_group).")
+			if(NOT EXISTS "${CMAKE_BINARY_DIR}/${InstallExportCC_INSTALL_POSTFIX}/${p_export_name}Config.cmake") # Not Very Effective Check
+				message(FATAL_ERROR "InstallExport(p_export_name): Must call SetupExport(p_export_name) with equal INSTALL_POSTFIX option before calling InstallExport(p_export_name).")
 			endif()
 	
-		install(FILES "${CMAKE_BINARY_DIR}/${InstallExportCC_INSTALL_POSTFIX}/${p_target_group}Config.cmake"
+		install(FILES "${CMAKE_BINARY_DIR}/${InstallExportCC_INSTALL_POSTFIX}/${p_export_name}Config.cmake"
 			${InstallExportCC_CONFIGURATIONS}
 			DESTINATION ${InstallExportCC_INSTALL_POSTFIX}
 			${InstallExportCC_COMPONENT}
 			${InstallExportCC_EXCLUDE_FROM_ALL}
 		)
 		
-		install(FILES "${CMAKE_BINARY_DIR}/${InstallExportCC_INSTALL_POSTFIX}/${p_target_group}Dependencies.cmake"
+		install(FILES "${CMAKE_BINARY_DIR}/${InstallExportCC_INSTALL_POSTFIX}/${p_export_name}Dependencies.cmake"
 			${InstallExportCC_CONFIGURATIONS}
 			DESTINATION ${InstallExportCC_INSTALL_POSTFIX}
 			${InstallExportCC_COMPONENT}
@@ -182,8 +186,8 @@ function(InstallExport p_target_group)
 	
 	# Create Targets.cmake (and Install it)
 	
-		install(EXPORT "${p_target_group}"
-			FILE "${p_target_group}Targets.cmake"
+		install(EXPORT "${p_export_name}"
+			FILE "${p_export_name}Targets.cmake"
 			${InstallExportCC_CONFIGURATIONS}
 			${InstallExportCC_NAMESPACE}
 			DESTINATION ${InstallExportCC_INSTALL_POSTFIX}

@@ -1,3 +1,7 @@
+#########################################################################
+## Copyright (c) 2018 Alastair Holmes. All rights reserved.
+#########################################################################
+
 # AddIncludeDirectoryToTarget(p_target_name p_directory):
 	# Options
 		# INSTALL_INTERFACE (Optional)

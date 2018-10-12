@@ -1,3 +1,7 @@
+#########################################################################
+## Copyright (c) 2018 Alastair Holmes. All rights reserved.
+#########################################################################
+
 # EnableGroups():
 	# Allows the Source, Header, and File grouping functionality to work. E.g. In MSVC the source and headers will be grouped as specified.
 	# Call before using 'HeaderGroup' or 'SourceGroup' etc

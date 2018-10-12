@@ -1,3 +1,7 @@
+#########################################################################
+## Copyright (c) 2018 Alastair Holmes. All rights reserved.
+#########################################################################
+
 # AddCMakeModulePath: Add Path to Module Search Path
 macro(AddCMakeModulePath p_path)
 	LIST(APPEND CMAKE_MODULE_PATH ${p_path})

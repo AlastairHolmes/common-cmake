@@ -1,3 +1,7 @@
+#########################################################################
+## Copyright (c) 2018 Alastair Holmes. All rights reserved.
+#########################################################################
+
 # SetProjectVersion: Setups version variables for ${p_project_name}:
 	# ${p_project_name}_VERSION
 	# ${p_project_name}_VERSION_MAJOR

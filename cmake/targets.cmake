@@ -1,3 +1,7 @@
+#########################################################################
+## Copyright (c) 2018 Alastair Holmes. All rights reserved.
+#########################################################################
+
 # PrintTargetType(p_target_name):
 function(PrintTargetType p_target_name)
 	get_target_property(target_type ${p_target_name} TYPE)
