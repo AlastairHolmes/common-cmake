@@ -30,7 +30,7 @@ function(AddTargetToGroup p_target_name p_group_name)
 	
 	get_target_property(target_type ${p_target_name} TYPE)
 	
-	if((${target_type} STREQUAL "INTERFACE_LIBRARY") AND ("${${target_type}_CC_CREATED}")) # HEADERONLY Library
+	if((${target_type} STREQUAL "INTERFACE_LIBRARY") AND ("${${p_target_name}_CC_CREATED}" STREQUAL "TRUE")) # HEADERONLY Library
 		
 		if(${${p_library_name}_CC_CREATED})
 		

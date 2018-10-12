@@ -61,7 +61,7 @@ endmacro()
 		# SetProjectVersionFromFile(Jackal "${CMAKE_CURRENT_SOURCE_LIST}/version/VERSION")
 macro(SetProjectVersionFromFile p_project_name p_version_file)
 
-	# Check version varaible's haven't been set already
+	# Check version variable's haven't been set already
 	if(	DEFINED ${p_project_name}_VERSION OR
 		DEFINED ${p_project_name}_VERSION_MAJOR OR
 		DEFINED ${p_project_name}_VERSION_MINOR OR
@@ -69,6 +69,11 @@ macro(SetProjectVersionFromFile p_project_name p_version_file)
 		message(WARNING "SetProjectVersionFromFile(${p_project_name} ${p_version_file}): The project's version variables have already been set.")
 	endif()
 
+	# Check macro's variables aren't defined
+	if(	DEFINED ${p_project_name}_VERSION_CC_SetProjectVersionFromFile)
+		message(FATAL_ERROR "SetProjectVersionFromFile(${p_project_name} ${p_version_file}): Macro's internal variables overlap with external variables.")
+	endif()
+	
 	if(NOT IS_ABSOLUTE "${p_version_file}")
 	
 		message(FATAL_ERROR "SetProjectVersionFromFile(p_project_name p_version_file): p_version_file must be an absolute path.")
@@ -76,8 +81,11 @@ macro(SetProjectVersionFromFile p_project_name p_version_file)
 	endif()
 
 	# setup global version variables
-	file(READ ${p_version_file} ${p_project_name}_VERSION)
+	file(READ ${p_version_file} ${p_project_name}_VERSION_CC_SetProjectVersionFromFile)
 
-	SetProjectVersion(${p_project_name} ${${p_project_name}_VERSION})
+	SetProjectVersion(${p_project_name} ${${p_project_name}_VERSION_CC_SetProjectVersionFromFile})
 
+	# Undefine the macro's internal variables.
+	unset(${p_project_name}_VERSION_CC_SetProjectVersionFromFile)
+	
 endmacro()
