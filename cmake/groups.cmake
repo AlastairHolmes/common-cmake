@@ -3,23 +3,33 @@
 #########################################################################
 
 # EnableGroups():
-	# Allows the Source, Header, and File grouping functionality to work. E.g. In MSVC the source and headers will be grouped as specified.
-	# Call before using 'HeaderGroup' or 'SourceGroup' etc
+	# Allows the Source, Header, and File grouping functionality to work. E.g. In MSVC IDE the source and headers will be grouped as specified.
+	# Call before using 'AddSourcesToTarget' or 'AddTargetToGroup'.
+	# Parameters:
+	# Options:
+	# Usage:
+		# EnableGroups()
 macro(EnableGroups)
 	set_property(GLOBAL PROPERTY USE_FOLDERS On)
 endmacro()
 
 # AddSourcesToTarget(p_target_name):
+	# Adds sources to target, similiar to CMake's target_sources().
+	# Parameters:
+		# p_target_name: must be the name of a target.
 	# Options:
-		# FILES
+		# FILES (NOT Optional)
+			# A list of the files to add to the target
+			# Note this can be a space-seperated list. (See 'Usage' below)
 		# GROUP (Optional)
-			# This uses the CMake source_group() function to group the files in your IDE. This will only work if EnableGroups()
-			# is called. This will currently only work in the Visual Studio generator.
+			# This uses the CMake source_group() function to group the files in your IDE. This will only
+			# work if EnableGroups() is called. This will currently only work in the Visual Studio generator.
 		# SCOPE (Optional)
-			# PUBLIC, INTERFACE, PRIVATE (See CMake Documentation)
+			# PUBLIC, INTERFACE, PRIVATE (See CMake 'target_sources' Documentation)
 		# INSTALL_DESTINATION (Optional)
 			# This is designed to be a quick and easy way to install public headers.
-			# Example setting: 'INSTALL_DESTINATION "Header Files//Utilities"'
+			# Must be a relative directory.
+			# Example setting: 'INSTALL_DESTINATION "include"'
 			# You can alternatively install them manually:
 				#install(
 				#	FILES
@@ -27,9 +37,19 @@ endmacro()
 				#	DESTINATION
 				#		"${INSTALL_DESTINATION}"
 				#	...)
-			# This allows you to control the COMPONENT and CONFIGURATIONS options.
-				
+				# This allows you to control the COMPONENT and CONFIGURATIONS options.
+	# Usage:
+		# AddSourcesToTarget(myTarget
+		#	GROUP "Headers" SCOPE "PUBLIC" INSTALL_DESTINATION "include/myTarget"
+		#	FILES
+		#		"${CMAKE_CURRENT_LIST_DIR}/header.h"
+		#		"${CMAKE_CURRENT_LIST_DIR}/header.h")	
 function(AddSourcesToTarget p_target_name)
+	
+	# Parameter Check
+	if(NOT TARGET ${p_target_name})
+		message(FATAL_ERROR "AddSourcesToTarget(${p_target_name}): A target with name ${p_target_name} doesn't exist.")
+	endif()
 	
 	# Parsing Arguments
 
@@ -41,7 +61,7 @@ function(AddSourcesToTarget p_target_name)
 	# Argument Checks
 	
 	if(NOT DEFINED ASTT_FILES)
-		message(FATAL_ERROR "AddSourcesToTarget(p_target_name): Must provide FILES option to specify what files/sources to add to the target.")
+		message(FATAL_ERROR "AddSourcesToTarget(${p_target_name}): Must provide FILES option to specify what files/sources to add to the target.")
 	endif()
 	
 	if(DEFINED ASTT_GROUP)
@@ -51,8 +71,14 @@ function(AddSourcesToTarget p_target_name)
 	if(NOT DEFINED ASTT_SCOPE)
 		set(ASTT_SCOPE "PRIVATE")
 	elseif(NOT ${ASTT_SCOPE} MATCHES "^(PUBLIC)|(PRIVATE)|(INTERFACE)$")
-		message(FATAL_ERROR "AddSourcesToTarget(p_target_name): SCOPE option must be PUBLIC, PRIVATE, or INTERFACE.")
+		message(FATAL_ERROR "AddSourcesToTarget(${p_target_name}): SCOPE=${ASTT_SCOPE} option must be PUBLIC, PRIVATE, or INTERFACE.")
 	endif()
+	
+	if((DEFINED ASTT_INSTALL_DESTINATION) AND (IS_ABSOLUTE ${ASTT_INSTALL_DESTINATION}))
+		message(FATAL_ERROR "AddSourcesToTarget(${p_target_name}): INSTALL_DESTINATION=${ASTT_INSTALL_DESTINATION} is not a relative path.")
+	endif()
+	
+	# Check relative directory
 	
 	get_target_property(target_type ${p_target_name} TYPE)
 	
@@ -91,8 +117,18 @@ endfunction()
 
 # AddTargetToGroup(p_target_name p_group_name):
 	# Easy grouping of targets in your IDE. Only works for the Visual Studio generator.
-	# Works for all targets, not only those created using CC macros.
+	# Parameters:
+		# p_target_name: must be the name of an existing target.
+		# p_group_name: the name which the target will be added to.
+	# Options:
+	# Usage:
+		# AddTargetToGroup(myTarget myTargetGroup)
 function(AddTargetToGroup p_target_name p_group_name)
+	
+	# Parameter Check
+	if(NOT TARGET ${p_target_name})
+		message(FATAL_ERROR "AddTargetToGroup(${p_target_name}): A target with name ${p_target_name} doesn't exist.")
+	endif()
 	
 	get_target_property(target_type ${p_target_name} TYPE)
 	

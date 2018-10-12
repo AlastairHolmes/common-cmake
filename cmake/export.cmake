@@ -8,11 +8,14 @@ include(CMakePackageConfigHelpers)
 # This file is used to generate Config.cmake files.
 set(CC_EXPORT_DEFAULT_CONFIG_FILE "${CMAKE_CURRENT_LIST_DIR}/default_export_config.cmake" CACHE INTERNAL "The template config.cmake file provided by common-cmake.")
 
-# SetupExport: Prepares a target group for installing
-	# This must called before calling InstallExport, and must only be called once for a particular INSTALL_POSTFIX
+# SetupExport(p_export_name):
+	# Prepares an export for installing.
+	# This must called before calling InstallExport, and must only be called once for a particular INSTALL_POSTFIX.
+	# Parameters:
+		# p_export_name: The name of the export to be setup
 	# Options:
 		# INSTALL_POSTFIX (Optional, Default Value: lib/cmake/${p_export_name})
-			# Controls the directory to which target group is installed.
+			# Controls the directory to which export is installed.
 		# VERSION (Optional)
 			# If specified will install a ${p_export_name}ConfigVersion.cmake file using the COMPATIBILITY specified
 				# This allows the version to be checked when importing your target.
@@ -23,14 +26,14 @@ set(CC_EXPORT_DEFAULT_CONFIG_FILE "${CMAKE_CURRENT_LIST_DIR}/default_export_conf
 			# Can only be AnyNewerVersion, SameMajorVersion, or ExactVersion.
 			# Controls if two versions are considered compatible by a find_package call.
 		# DEPENDENCY_FILE (Optional)
-			# This is an absolute path to a .cmake file that finds all the dependencies required by the targets in this target group.
+			# This is an absolute path to a .cmake file that finds all the dependencies required by the targets in this export.
 		# DEPENDENCIES (Optional)
-			# This is a list of dependencies required by the targets in this target group.
+			# This is a list of dependencies required by the targets in this export.
 			# Each element in the list represents a call to find_dependency() and
 			# can be used to add options to the call e.g. SetupExport(TargetGroupExample DEPENDENCIES "Boost 1.36.0 REQUIRED" "LUA")
-				# This means the targets in the target group 'TargetGroupExample' depend on Boost and Lua, but only definitely needs Boost.
+				# This means the targets in the export 'ExportExample' depend on Boost and Lua, but only definitely needs Boost.
 				# See CMake find_dependency() documentation.
-			
+	# Usage: SetupExport(myExport VERSION 1.0.0 COMPATIBILITY ExactVersion DEPENDENCIES "Boost")
 function(SetupExport p_export_name)
 	
 	# Parsing Arguments
@@ -45,24 +48,24 @@ function(SetupExport p_export_name)
 	if(NOT DEFINED SetupExportCC_INSTALL_POSTFIX)
 		set(SetupExportCC_INSTALL_POSTFIX "lib/cmake/${p_export_name}")
 	elseif(IS_ABSOLUTE "${SetupExportCC_INSTALL_POSTFIX}")
-		message(FATAL_ERROR "SetupExport(p_export_name): INSTALL_POSTFIX option must be a relative path.")
+		message(FATAL_ERROR "SetupExport(${p_export_name}): INSTALL_POSTFIX=${INSTALL_POSTFIX} option is not a relative path.")
 	endif()
 	
 	if(DEFINED SetupExportCC_VERSION)
 		if(NOT DEFINED SetupExportCC_COMPATIBILITY)
 			message(FATAL_ERROR "SetupExport(p_export_name): If VERSION option is given, you must provide the COMPATIBILITY option.")
 		elseif(NOT ${SetupExportCC_COMPATIBILITY} MATCHES "^(AnyNewerVersion)|(SameMajorVersion)|(ExactVersion)$")
-			message(FATAL_ERROR "SetupExport(p_export_name): COMPATIBILITY must be AnyNewerVersion, SameMajorVersion, or ExactVersion.")
+			message(FATAL_ERROR "SetupExport(${p_export_name}): COMPATIBILITY must be AnyNewerVersion, SameMajorVersion, or ExactVersion.")
 		endif()
 	else()
 		if(DEFINED SetupExportCC_COMPATIBILITY)
-			message(AUTHOR_WARNING "SetupExport(p_export_name): If VERSION option is not provided, COMPATIBILITY option is ignored.")
+			message(AUTHOR_WARNING "SetupExport(${p_export_name}): If VERSION option is not provided, COMPATIBILITY option is ignored.")
 		endif()
 	endif()
 	
 	if(DEFINED SetupExportCC_DEPENDENCY_FILE)
 		if((NOT IS_ABSOLUTE ${SetupExportCC_DEPENDENCY_FILE}) OR (NOT EXISTS ${SetupExportCC_DEPENDENCY_FILE}))
-			message(FATAL_ERROR "SetupExport(p_export_name): DEPENDENCY_FILE must be an absolute path to an existing file.")
+			message(FATAL_ERROR "SetupExport(${p_export_name}): DEPENDENCY_FILE must be an absolute path to an existing file.")
 		endif()
 		set(UseDependencyFile TRUE)
 	elseif()
@@ -102,15 +105,19 @@ function(SetupExport p_export_name)
 	
 endfunction()
 
-# InstallExport: Installs all the targets in the target group '${p_export_name}' to "${CMAKE_INSTALL_PREFIX}/${INSTALL_POSTFIX}"
-	# You must call SetupExport will the same INSTALL_POSTFIX option before this function.
+# InstallExport(p_export_name):
+	# Installs all the targets in the export '${p_export_name}' to "${CMAKE_INSTALL_PREFIX}/${INSTALL_POSTFIX}"
+	# You must call SetupExport with the same INSTALL_POSTFIX option before this function.
+	# Parameters:
+		# p_export_name: The name of the export to be installed.
 	# Options:
-		# EXCLUDE_FROM_ALL - See CMake Install Documentation
-		# NAMESPACE - See CMake Install Documentation
-		# COMPONENT - See CMake Install Documentation
-		# CONFIGURATIONS - See CMake Install Documentation
+		# EXCLUDE_FROM_ALL (Optional) (See CMake Install Documentation)
+		# NAMESPACE (Optional) (See CMake Install Documentation)
+		# COMPONENT (Optional) (See CMake Install Documentation)
+		# CONFIGURATIONS (Optional) (See CMake Install Documentation)
 		# INSTALL_POSTFIX (Optional, Default Value: lib/cmake/${p_export_name})
-			# Controls the directory to which target group is installed.		
+			# Controls the directory to which export is installed.
+	# Usage:
 function(InstallExport p_export_name)
 
 	# Parsing Arguments

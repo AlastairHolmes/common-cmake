@@ -2,16 +2,32 @@
 ## Copyright (c) 2018 Alastair Holmes. All rights reserved.
 #########################################################################
 
-# SetProjectVersion: Setups version variables for ${p_project_name}:
-	# ${p_project_name}_VERSION
-	# ${p_project_name}_VERSION_MAJOR
-	# ${p_project_name}_VERSION_MINOR
-	# ${p_project_name}_VERSION_PATCH
+# SetProjectVersion(p_project_name p_version):
+	# Setups version variables for ${p_project_name}:
+		# ${p_project_name}_VERSION
+		# ${p_project_name}_VERSION_MAJOR
+		# ${p_project_name}_VERSION_MINOR
+		# ${p_project_name}_VERSION_PATCH
+	# Parameters:
+		# p_project_name: The version variable's prefix.
+		# p_version: should be formatted MAJOR.MINOR.PATCH
+	# Options:
+	# Usage:
+		# SetProjectVersion(Jackal 1.0.0)
 macro(SetProjectVersion p_project_name p_version)
 
+	# Check version varaible's haven't been set already
+	if(	DEFINED ${p_project_name}_VERSION OR
+		DEFINED ${p_project_name}_VERSION_MAJOR OR
+		DEFINED ${p_project_name}_VERSION_MINOR OR
+		DEFINED ${p_project_name}_VERSION_PATCH)
+		message(WARNING "SetProjectVersion(${p_project_name} ${p_version}): The project's version variables have already been set.")
+	endif()
+
+	# Parameter Check
 	if(NOT ${p_version} MATCHES "^([0-9]+)\\.([0-9]+)\\.([0-9]+)$")
 	
-		message(FATAL_ERROR "SetDefaultInstallPrefix(p_project_name p_version): p_version is not formatted corrected. Expects '^([0-9]+)\\.([0-9]+)\\.([0-9]+)$\' ")
+		message(FATAL_ERROR "SetDefaultInstallPrefix(p_project_name p_version): p_version=${p_version} is not formatted corrected. Expects '^([0-9]+)\\.([0-9]+)\\.([0-9]+)$\' ")
 	
 	endif()
 
@@ -30,9 +46,28 @@ macro(SetProjectVersion p_project_name p_version)
 	
 endmacro()
 
-# SetProjectVersionFromFile: Equivalent to SetProjectVersion, but reads the project version from a file.
-	# VersionFile must be absolute path.
+# SetProjectVersionFromFile(p_project_name p_version_file):
+	# Setups version variables for ${p_project_name}:
+		# ${p_project_name}_VERSION
+		# ${p_project_name}_VERSION_MAJOR
+		# ${p_project_name}_VERSION_MINOR
+		# ${p_project_name}_VERSION_PATCH
+	# Equivalent to SetProjectVersion, but reads the project version from a file.
+	# Parameters:
+		# p_project_name: The version variable's prefix.
+		# p_version_file: must be an absolute path.
+	# Options:
+	# Usage:
+		# SetProjectVersionFromFile(Jackal "${CMAKE_CURRENT_SOURCE_LIST}/version/VERSION")
 macro(SetProjectVersionFromFile p_project_name p_version_file)
+
+	# Check version varaible's haven't been set already
+	if(	DEFINED ${p_project_name}_VERSION OR
+		DEFINED ${p_project_name}_VERSION_MAJOR OR
+		DEFINED ${p_project_name}_VERSION_MINOR OR
+		DEFINED ${p_project_name}_VERSION_PATCH)
+		message(WARNING "SetProjectVersionFromFile(${p_project_name} ${p_version_file}): The project's version variables have already been set.")
+	endif()
 
 	if(NOT IS_ABSOLUTE "${p_version_file}")
 	
