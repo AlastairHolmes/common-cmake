@@ -1,6 +1,11 @@
-
 build/
 bin/
+examples/base_header_library/bin
+examples/base_header_library/build
+examples/executable/bin
+examples/executable/build
+examples/static_library/bin
+examples/static_library/build
 doc/
 include/
 lib/

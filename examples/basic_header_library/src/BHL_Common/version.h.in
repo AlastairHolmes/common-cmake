@@ -1,0 +1,6 @@
+// compiler-time globals
+#define BHL_VERSION_MAJOR @BHL_VERSION_MAJOR@
+#define BHL_VERSION_MINOR @BHL_VERSION_MINOR@
+#define BHL_VERSION_PATCH @BHL_VERSION_PATCH@
+
+#define BHL_NAME "@BHL_NAME@"
