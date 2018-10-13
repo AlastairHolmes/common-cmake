@@ -58,11 +58,11 @@ function(AddSourcesToTarget p_target_name)
 	
 	if(NOT DEFINED ASTT_SCOPE)
 		set(ASTT_SCOPE "PRIVATE")
-	elseif(NOT ${ASTT_SCOPE} MATCHES "^(PUBLIC)|(PRIVATE)|(INTERFACE)$")
+	elseif(NOT "${ASTT_SCOPE}" MATCHES "^(PUBLIC)|(PRIVATE)|(INTERFACE)$")
 		message(FATAL_ERROR "AddSourcesToTarget(${p_target_name}): SCOPE=${ASTT_SCOPE} option must be PUBLIC, PRIVATE, or INTERFACE.")
 	endif()
 	
-	if((DEFINED ASTT_INSTALL_DESTINATION) AND (IS_ABSOLUTE ${ASTT_INSTALL_DESTINATION}))
+	if((DEFINED ASTT_INSTALL_DESTINATION) AND (IS_ABSOLUTE "${ASTT_INSTALL_DESTINATION}"))
 		message(FATAL_ERROR "AddSourcesToTarget(${p_target_name}): INSTALL_DESTINATION=${ASTT_INSTALL_DESTINATION} is not a relative path.")
 	endif()
 	
@@ -70,15 +70,15 @@ function(AddSourcesToTarget p_target_name)
 	
 	get_target_property(target_type ${p_target_name} TYPE)
 	
-	if((${target_type} STREQUAL "INTERFACE_LIBRARY") AND ("${${p_target_name}_CC_CREATED}")) # HEADERONLY Library
+	if(("${target_type}" STREQUAL "INTERFACE_LIBRARY") AND ("${${p_target_name}_CC_CREATED}")) # HEADERONLY Library
 		
-		if(TARGET ${p_target_name}_ide)
+		if(TARGET "${p_target_name}_ide")
 		
-			set_property(TARGET ${p_target_name}_ide APPEND PROPERTY SOURCES ${ASTT_FILES})
+			set_property(TARGET ${p_target_name}_ide APPEND PROPERTY SOURCES "${ASTT_FILES}")
 	
 		endif()
 	
-		if((${ASTT_SCOPE} STREQUAL "PUBLIC") OR (${ASTT_SCOPE} STREQUAL "INTERFACE"))
+		if(("${ASTT_SCOPE}" STREQUAL "PUBLIC") OR ("${ASTT_SCOPE}" STREQUAL "INTERFACE"))
 			
 			target_sources(${p_target_name} INTERFACE ${ASTT_FILES})
 			
@@ -86,7 +86,7 @@ function(AddSourcesToTarget p_target_name)
 	
 	else()
 	
-		target_sources(${p_target_name} ${ASTT_SCOPE} ${ASTT_FILES})
+		target_sources(${p_target_name} "${ASTT_SCOPE}" "${ASTT_FILES}")
 	
 	endif()
 	

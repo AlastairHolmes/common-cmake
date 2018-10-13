@@ -73,7 +73,13 @@ function(SetupExport p_export_name)
 	endif()
 	
 	if(DEFINED SetupExportCC_DEPENDENCIES)
-		set(DependencyList "${SetupExportCC_DEPENDENCIES}")
+		
+		set(DependencyList "")
+		
+		foreach(SECC_DEPENDENCY ${SetupExportCC_DEPENDENCIES})
+			string(APPEND DependencyList "find_dependency(${SECC_DEPENDENCY})\n")
+		endforeach()
+		
 	else()
 		set(DependencyList "")
 	endif()
@@ -94,7 +100,7 @@ function(SetupExport p_export_name)
 		
 	# Create Dependencies.cmake File
 	
-		if(${CC_ExportTargetGroup_UseDependencyFile})
+		if("${CC_ExportTargetGroup_UseDependencyFile}")
 			configure_file("${p_dependencies_file}" "${CMAKE_BINARY_DIR}/${SetupExportCC_INSTALL_POSTFIX}/${p_export_name}Dependencies.cmake" @ONLY)
 		endif()
 		
@@ -136,7 +142,7 @@ function(InstallExport p_export_name)
 	endif()
 	
 	if(DEFINED InstallExportCC_NAMESPACE)
-		set(InstallExportCC_NAMESPACE "NAMESPACE ${InstallExportCC_NAMESPACE}::")
+		set(InstallExportCC_NAMESPACE NAMESPACE ${InstallExportCC_NAMESPACE}::)
 	else()
 		set(InstallExportCC_NAMESPACE "")
 	endif()

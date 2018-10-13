@@ -25,7 +25,7 @@ macro(SetProjectVersion p_project_name p_version)
 	endif()
 
 	# Parameter Check
-	if(NOT ${p_version} MATCHES "^([0-9]+)\\.([0-9]+)\\.([0-9]+)$")
+	if(NOT "${p_version}" MATCHES "^([0-9]+)\\.([0-9]+)\\.([0-9]+)$")
 	
 		message(FATAL_ERROR "SetDefaultInstallPrefix(p_project_name p_version): p_version=${p_version} is not formatted corrected. Expects '^([0-9]+)\\.([0-9]+)\\.([0-9]+)$\' ")
 	

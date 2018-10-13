@@ -24,23 +24,23 @@ endmacro()
 function(AddTargetToGroup p_target_name p_group_name)
 	
 	# Parameter Check
-	if(NOT TARGET ${p_target_name})
+	if(NOT TARGET "${p_target_name}")
 		message(FATAL_ERROR "AddTargetToGroup(${p_target_name}): A target with name ${p_target_name} doesn't exist.")
 	endif()
 	
 	get_target_property(target_type ${p_target_name} TYPE)
 	
-	if((${target_type} STREQUAL "INTERFACE_LIBRARY") AND ("${${p_target_name}_CC_CREATED}" STREQUAL "TRUE")) # HEADERONLY Library
+	if(("${target_type}" STREQUAL "INTERFACE_LIBRARY") AND ("${${p_target_name}_CC_CREATED}" STREQUAL "TRUE")) # HEADERONLY Library
 		
 		if(${${p_target_name}_CC_CREATED})
 		
-			set_target_properties(${p_target_name}_ide PROPERTIES FOLDER ${p_group_name})
+			set_target_properties(${p_target_name}_ide PROPERTIES FOLDER "${p_group_name}")
 			
 		endif()
 	
 	else()
 	
-		set_target_properties(${p_target_name} PROPERTIES FOLDER ${p_group_name})
+		set_target_properties(${p_target_name} PROPERTIES FOLDER "${p_group_name}")
 	
 	endif()
 		
