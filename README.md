@@ -1,5 +1,5 @@
 # Common CMake
-A set of macros and functions to make using CMake easier. These are primarily focused on correctly and simply exporting/installing targets. This set of utilities is not intended to cover all case, but simply avoid duplicating code in common cases. These utilities do not depend on each other, meaning these functions can be mixed with 'raw' CMake and still function correctly; for example, an export can contain your own targets that you manually create, and the SetupExport and InstallExport functions will still function correctly.
+A set of macros and functions to make using CMake easier. These are primarily focused on correctly and simply exporting/installing targets. This set of utilities is not intended to cover all cases, but simply avoid duplicating code in common cases. These utilities do not depend on each other, meaning these functions can be mixed with 'raw' CMake and still function correctly; for example, an export can contain your own targets that you manually create, and the SetupExport and InstallExport functions will still function correctly.
 
 ## Examples
 
@@ -99,4 +99,4 @@ The utilities are documented inplace inside the 'cmake' directory.
 
 - Use 'configure_package_config_file' internally.
 - Remove DEPENDENCY_FILE option and rework as CONFIG_FILE option.
-- Test
+- Add Testing
