@@ -1,5 +1,5 @@
 # Common CMake
-A set of macros and functions to make using CMake easier. These are primarily focused on correctly and simply exporting/installing targets. This set of utilities is not intended to cover all case, but simply avoid duplicating code in common cases.
+A set of macros and functions to make using CMake easier. These are primarily focused on correctly and simply exporting/installing targets. This set of utilities is not intended to cover all case, but simply avoid duplicating code in common cases. These utilities do not depend on each other, meaning these functions can be mixed with 'raw' CMake and still function correctly; for example, an export can contain your own targets that you manually create, and the SetupExport and InstallExport functions will still function correctly.
 
 ## Examples
 
@@ -72,6 +72,29 @@ Even if you don't use any of my utilities, here are some guidelines I have found
 	- [Its time to do CMake right](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/)
 	- [Awesome CMake](https://github.com/onqtam/awesome-cmake)
 	
+## Usage
+
+I personally include these utilties in my projects by using 'find_package' (To avoid hard-coded paths, and so I don't have duplicates of these utilities all over my system), but it is more sensible to use 'include(common.cmake)'.
+
+## Documentation
+
+The utilities are documented inplace inside the 'cmake' directory.
+
+## Contents
+
+- SetProjectVersion
+- SetProjectVersionFromFile
+- AddCMakeModulePath
+- SetDefaultInstallPrefix
+- PrintTargetType
+- AddLibrary
+- EnableGroups
+- AddTargetToGroup
+- AddIncludeDirectoryToTarget
+- AddSourcesToTarget
+- SetupExport
+- InstallExport
+
 ## TODO:
 
 - Use 'configure_package_config_file' internally.
