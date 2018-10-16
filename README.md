@@ -71,6 +71,7 @@ Even if you don't use any of my utilities, here are some guidelines I have found
 	- [Effective Modern CMake](https://gist.github.com/mbinna/c61dbb39bca0e4fb7d1f73b0d66a4fd1)
 	- [Its time to do CMake right](https://pabloariasal.github.io/2018/02/19/its-time-to-do-cmake-right/)
 	- [Awesome CMake](https://github.com/onqtam/awesome-cmake)
+- Use the CMake IDE, its much quicker. You generally don't want/need to be using the command-line. The only reason you want to be using the command-line to run CMake is if you are automating builds etc (I.e. A Python script that runs CMake).
 	
 ## Usage
 
@@ -100,3 +101,6 @@ The utilities are documented inplace inside the 'cmake' directory.
 - Use 'configure_package_config_file' internally.
 - Remove DEPENDENCY_FILE option and rework as CONFIG_FILE option.
 - Add Testing
+- Improve argument error checking
+- Expand usage of BUILD_TYPE_REGEX option to all relate functions/macros. (Useful for single-configuration generators) 
+- Consider Export internal changes to support Export(PACKAGE) command.
