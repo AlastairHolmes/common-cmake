@@ -21,13 +21,13 @@ macro(SetProjectVersion p_project_name p_version)
 		DEFINED ${p_project_name}_VERSION_MAJOR OR
 		DEFINED ${p_project_name}_VERSION_MINOR OR
 		DEFINED ${p_project_name}_VERSION_PATCH)
-		message(WARNING "SetProjectVersion(${p_project_name} ${p_version}): The project's version variables have already been set.")
+		message(WARNING "SetProjectVersion('${p_project_name}' '${p_version}'): The project's version variables have already been set.")
 	endif()
 
 	# Parameter Check
 	if(NOT "${p_version}" MATCHES "^([0-9]+)\\.([0-9]+)\\.([0-9]+)$")
 	
-		message(FATAL_ERROR "SetDefaultInstallPrefix(p_project_name p_version): p_version=${p_version} is not formatted corrected. Expects '^([0-9]+)\\.([0-9]+)\\.([0-9]+)$\' ")
+		message(FATAL_ERROR "SetProjectVersion('${p_project_name}' '${p_version}'): p_version='${p_version}' is not formatted corrected. Expects '^([0-9]+)\\.([0-9]+)\\.([0-9]+)$\' ")
 	
 	endif()
 
@@ -66,17 +66,17 @@ macro(SetProjectVersionFromFile p_project_name p_version_file)
 		DEFINED ${p_project_name}_VERSION_MAJOR OR
 		DEFINED ${p_project_name}_VERSION_MINOR OR
 		DEFINED ${p_project_name}_VERSION_PATCH)
-		message(WARNING "SetProjectVersionFromFile(${p_project_name} ${p_version_file}): The project's version variables have already been set.")
+		message(WARNING "SetProjectVersionFromFile('${p_project_name}' '${p_version_file}'): The project's version variables have already been set.")
 	endif()
 
 	# Check macro's variables aren't defined
 	if(	DEFINED ${p_project_name}_VERSION_CC_SetProjectVersionFromFile)
-		message(FATAL_ERROR "SetProjectVersionFromFile(${p_project_name} ${p_version_file}): Macro's internal variables overlap with external variables.")
+		message(FATAL_ERROR "SetProjectVersionFromFile('${p_project_name}' '${p_version_file}'): Macro's internal variables overlap with external variables.")
 	endif()
 	
 	if(NOT IS_ABSOLUTE "${p_version_file}")
 	
-		message(FATAL_ERROR "SetProjectVersionFromFile(p_project_name p_version_file): p_version_file must be an absolute path.")
+		message(FATAL_ERROR "SetProjectVersionFromFile('${p_project_name}' '${p_version_file}'): p_version_file='${p_version_file}' must be an absolute path.")
 	
 	endif()
 

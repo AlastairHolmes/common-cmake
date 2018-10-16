@@ -38,21 +38,21 @@ macro(AddLibrary p_target_name p_type)
 
 	# Parameter Checks
 	if(TARGET ${p_target_name})
-		message(FATAL_ERROR "AddLibrary(${p_target_name} ${p_type}): A target with name ${p_target_name} already exists.")
+		message(FATAL_ERROR "AddLibrary('${p_target_name}' '${p_type}'): A target with name '${p_target_name}' already exists.")
 	endif()
 
 	if(NOT "${p_type}" MATCHES "^(STATIC)|(SHARED)|(MODULE)|(HEADERONLY)$")
-		message(FATAL_ERROR "AddLibrary(${p_target_name} ${p_type}): p_type=${p_type} is not STATIC, SHARED, MODULE, or HEADERONLY")
+		message(FATAL_ERROR "AddLibrary('${p_target_name}' '${p_type}'): p_type='${p_type}' is not STATIC, SHARED, MODULE, or HEADERONLY")
 	endif()
 	
 	# Check macro's variables aren't defined
 	if(	DEFINED AddLibraryCC_EXCLUDE_FROM_ALL OR
 		DEFINED AddLibraryCC_ALL)
-		message(FATAL_ERROR "AddLibrary(${p_target_name} ${p_type}): Macro's internal variables overlap with external variables.")
+		message(FATAL_ERROR "AddLibrary('${p_target_name}' '${p_type}'): Macro's internal variables overlap with external variables.")
 	endif()
 	
 	if(DEFINED ${p_target_name}_CC_CREATED)
-		message(FATAL_ERROR "AddLibrary(${p_target_name} ${p_type}): ${p_target_name}_CC_CREATED has been defined. This variable is used for common-cmake's internal target tracking. You must not define this yourself.")
+		message(FATAL_ERROR "AddLibrary('${p_target_name}' '${p_type}'): ${p_target_name}_CC_CREATED has been defined. This variable is used for common-cmake's internal target tracking. You must not define this yourself.")
 	endif()
 	set(${p_target_name}_CC_CREATED TRUE)
 	
@@ -80,7 +80,7 @@ macro(AddLibrary p_target_name p_type)
 		add_library(${p_target_name} INTERFACE)	
 		add_custom_target(${p_target_name}_ide ${AddLibraryCC_ALL} VERBATIM)
 	else()
-		message(FATAL_ERROR "AddLibrary(${p_target_name} ${p_type}): p_type=${p_type} is not STATIC, SHARED, MODULE, or HEADERONLY")
+		message(FATAL_ERROR "AddLibrary('${p_target_name}' '${p_type}'): p_type='${p_type}' is not STATIC, SHARED, MODULE, or HEADERONLY")
 	endif()
 	
 	# Undefine the macro's internal variables.

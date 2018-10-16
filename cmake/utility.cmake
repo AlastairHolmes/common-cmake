@@ -14,7 +14,7 @@ macro(AddCMakeModulePath p_path)
 	# Parameter Check
 	if(NOT IS_ABSOLUTE "${p_path}")
 	
-		message(FATAL_ERROR "AddCMakeModulePath(${p_path}): p_path='${p_path}' is not an absolute path.")
+		message(FATAL_ERROR "AddCMakeModulePath('${p_path}'): p_path='${p_path}' is not an absolute path.")
 	
 	endif()
 	
@@ -36,7 +36,7 @@ macro(SetDefaultInstallPrefix p_default_path)
 	# Parameter Checks
 	if(NOT IS_ABSOLUTE "${p_default_path}")
 	
-		message(FATAL_ERROR "SetDefaultInstallPrefix(${p_default_path}): p_default_path='${p_default_path}' is not an absolute path.")
+		message(FATAL_ERROR "SetDefaultInstallPrefix('${p_default_path}'): p_default_path='${p_default_path}' is not an absolute path.")
 	
 	endif()
 

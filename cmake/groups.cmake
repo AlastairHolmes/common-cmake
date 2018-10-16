@@ -25,7 +25,7 @@ function(AddTargetToGroup p_target_name p_group_name)
 	
 	# Parameter Check
 	if(NOT TARGET "${p_target_name}")
-		message(FATAL_ERROR "AddTargetToGroup(${p_target_name}): A target with name ${p_target_name} doesn't exist.")
+		message(FATAL_ERROR "AddTargetToGroup('${p_target_name}'): A target with name ${p_target_name} doesn't exist.")
 	endif()
 	
 	get_target_property(target_type ${p_target_name} TYPE)

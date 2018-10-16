@@ -36,7 +36,7 @@ function(AddSourcesToTarget p_target_name)
 	
 	# Parameter Check
 	if(NOT TARGET ${p_target_name})
-		message(FATAL_ERROR "AddSourcesToTarget(${p_target_name}): A target with name ${p_target_name} doesn't exist.")
+		message(FATAL_ERROR "AddSourcesToTarget('${p_target_name}'): A target with name '${p_target_name}' doesn't exist.")
 	endif()
 	
 	# Parsing Arguments
@@ -49,7 +49,7 @@ function(AddSourcesToTarget p_target_name)
 	# Argument Checks
 	
 	if(NOT DEFINED ASTT_FILES)
-		message(FATAL_ERROR "AddSourcesToTarget(${p_target_name}): Must provide FILES option to specify what files/sources to add to the target.")
+		message(FATAL_ERROR "AddSourcesToTarget('${p_target_name}'): Must provide FILES option to specify what files/sources to add to the target.")
 	endif()
 	
 	if(DEFINED ASTT_GROUP)
@@ -59,11 +59,11 @@ function(AddSourcesToTarget p_target_name)
 	if(NOT DEFINED ASTT_SCOPE)
 		set(ASTT_SCOPE "PRIVATE")
 	elseif(NOT "${ASTT_SCOPE}" MATCHES "^(PUBLIC)|(PRIVATE)|(INTERFACE)$")
-		message(FATAL_ERROR "AddSourcesToTarget(${p_target_name}): SCOPE=${ASTT_SCOPE} option must be PUBLIC, PRIVATE, or INTERFACE.")
+		message(FATAL_ERROR "AddSourcesToTarget('${p_target_name}'): SCOPE='${ASTT_SCOPE}' option must be PUBLIC, PRIVATE, or INTERFACE.")
 	endif()
 	
 	if((DEFINED ASTT_INSTALL_DESTINATION) AND (IS_ABSOLUTE "${ASTT_INSTALL_DESTINATION}"))
-		message(FATAL_ERROR "AddSourcesToTarget(${p_target_name}): INSTALL_DESTINATION=${ASTT_INSTALL_DESTINATION} is not a relative path.")
+		message(FATAL_ERROR "AddSourcesToTarget('${p_target_name}'): INSTALL_DESTINATION='${ASTT_INSTALL_DESTINATION}' is not a relative path.")
 	endif()
 	
 	# Check relative directory
