@@ -95,6 +95,7 @@ The utilities are documented inplace inside the 'cmake' directory.
 - AddSourcesToTarget
 - SetupExport
 - InstallExport
+- GenerateDoxygenDocumentation
 
 ## TODO:
 
