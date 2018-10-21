@@ -26,6 +26,8 @@
 				#		"${INSTALL_DESTINATION}"
 				#	...)
 				# This allows you to control the COMPONENT and CONFIGURATIONS options.
+			# Note the sources/files will always be installed, even if the target isn't
+				# But this is hard to avoid even if you manually install
 	# Usage:
 		# AddSourcesToTarget(myTarget
 		#	GROUP "Headers" SCOPE "PUBLIC" INSTALL_DESTINATION "include/myTarget"
@@ -53,7 +55,7 @@ function(AddSourcesToTarget p_target_name)
 	endif()
 	
 	if(DEFINED ASTT_GROUP)
-		source_group("${ASTT_GROUP}" FILES "${ASTT_FILES}")
+		source_group("${ASTT_GROUP}" FILES ${ASTT_FILES})
 	endif()
 	
 	if(NOT DEFINED ASTT_SCOPE)
@@ -74,7 +76,7 @@ function(AddSourcesToTarget p_target_name)
 		
 		if(TARGET "${p_target_name}_ide")
 		
-			set_property(TARGET ${p_target_name}_ide APPEND PROPERTY SOURCES "${ASTT_FILES}")
+			set_property(TARGET ${p_target_name}_ide APPEND PROPERTY SOURCES ${ASTT_FILES})
 	
 		endif()
 	
@@ -86,7 +88,7 @@ function(AddSourcesToTarget p_target_name)
 	
 	else()
 	
-		target_sources(${p_target_name} "${ASTT_SCOPE}" "${ASTT_FILES}")
+		target_sources(${p_target_name} "${ASTT_SCOPE}" ${ASTT_FILES})
 	
 	endif()
 	
@@ -94,7 +96,7 @@ function(AddSourcesToTarget p_target_name)
 			
 		install(
 			FILES
-				"${ASTT_FILES}"
+				${ASTT_FILES}
 			DESTINATION
 				"${ASTT_INSTALL_DESTINATION}"
 		)
