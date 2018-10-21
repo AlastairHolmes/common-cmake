@@ -104,3 +104,5 @@ The utilities are documented inplace inside the 'cmake' directory.
 - Add Testing
 - Improve argument error checking
 - Consider Export internal changes to support Export(PACKAGE) command.
+- Improve documentation of arguments and options
+- Check all argument checkng logic and consider extra error checking.
