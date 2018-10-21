@@ -17,9 +17,6 @@
 			# If set will produce fatal error if is can't find a doxygen installation.
 		# QUIET (Optional)
 			# If set this function will only produce warnings (not fatal errors) in the case it can't find Doxygen. (see REQUIRED option)
-		# BUILD_TYPE_REGEX (Optional)
-			# Contains a REGEX expression, if this regex expression doesn't match the current CMAKE_BUILD_TYPE the documentation target with not be created.
-			# If this option is not set the target will always be created.
 	# Usage:
 		# GenerateDoxygenDocumentation(Documentation "${CMAKE_CURRENT_LIST_DIR}/Doxy/Doxyfile.in" REQUIRED)
 function(GenerateDoxygenDocumentation p_documentation_target_name p_preconfig_doxyfile)
@@ -27,51 +24,47 @@ function(GenerateDoxygenDocumentation p_documentation_target_name p_preconfig_do
 	# Parsing Arguments
 
 	set(option_args ALL REQUIRED QUIET)
-    set(one_value_args BUILD_TYPE_REGEX)
+    set(one_value_args "")
     set(multi_value_args "")
 	cmake_parse_arguments(GenerateDoxygenCC "${option_args}" "${one_value_args}" "${multi_value_args}" ${ARGN})
 	
-	if((NOT DEFINED GenerateDoxygenCC_BUILD_TYPE_REGEX) OR ("${CMAKE_BUILD_TYPE}" MATCHES "${GenerateDoxygenCC_BUILD_TYPE_REGEX}"))
+	if(TARGET "${p_documentation_target_name}")
+		message(FATAL_ERROR "GenerateDoxygenDocumentation('${p_documentation_target_name}' '${p_preconfig_doxyfile}'): A Target with name '${p_documentation_target_name}' already exists.")
+	endif()
 	
-		if(TARGET "${p_documentation_target_name}")
-			message(FATAL_ERROR "GenerateDoxygenDocumentation('${p_documentation_target_name}' '${p_preconfig_doxyfile}'): A Target with name '${p_documentation_target_name}' already exists.")
-		endif()
-		
-		if(NOT EXISTS "${p_preconfig_doxyfile}")
-			message(FATAL_ERROR "GenerateDoxygenDocumentation('${p_documentation_target_name}' '${p_preconfig_doxyfile}'): File '${p_preconfig_doxyfile}' doesn't exist.")
-		endif()
+	if(NOT EXISTS "${p_preconfig_doxyfile}")
+		message(FATAL_ERROR "GenerateDoxygenDocumentation('${p_documentation_target_name}' '${p_preconfig_doxyfile}'): File '${p_preconfig_doxyfile}' doesn't exist.")
+	endif()
+
+	find_package(Doxygen QUIET)
+
+	if(DOXYGEN_FOUND)
 	
-		find_package(Doxygen QUIET)
-
-		if(DOXYGEN_FOUND)
+		# configure doxygen
+		configure_file("${p_preconfig_doxyfile}" "${CMAKE_CURRENT_BINARY_DIR}/${p_documentation_target_name}/Doxyfile" @ONLY)
 		
-			# configure doxygen
-			configure_file("${p_preconfig_doxyfile}" "${CMAKE_CURRENT_BINARY_DIR}/${p_documentation_target_name}/Doxyfile" @ONLY)
-			
-			# add a target to generate API documentation with Doxygen
-			if(${GenerateDoxygenCC_ALL})
-			
-				add_custom_target(${p_documentation_target_name} ALL
-					"${DOXYGEN_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/${p_documentation_target_name}/Doxyfile"
-					WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${p_documentation_target_name}"
-					COMMENT "Generating '${p_documentation_target_name}' documentation with Doxygen" VERBATIM)
-			else()
-			
-				add_custom_target(${p_documentation_target_name}
-					"${DOXYGEN_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/${p_documentation_target_name}/Doxyfile"
-					WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${p_documentation_target_name}"
-					COMMENT "Generating '${p_documentation_target_name}' documentation with Doxygen" VERBATIM)
-			
-			endif()
-		  
-		elseif(NOT ${GenerateDoxygenCC_QUIET}) 
-			if(${GenerateDoxygenCC_REQUIRED})
-				message(FATAL_ERROR "GenerateDoxygenDocumentation('${p_documentation_target_name}' '${p_preconfig_doxyfile}'): Could not find Doxygen.")
-			else()
-				message(WARNING "Doxygen documentation target wasn't added as Doxygen could not be found.")
-			endif()
+		# add a target to generate API documentation with Doxygen
+		if(${GenerateDoxygenCC_ALL})
+		
+			add_custom_target(${p_documentation_target_name} ALL
+				"${DOXYGEN_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/${p_documentation_target_name}/Doxyfile"
+				WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${p_documentation_target_name}"
+				COMMENT "Generating '${p_documentation_target_name}' documentation with Doxygen" VERBATIM)
+		else()
+		
+			add_custom_target(${p_documentation_target_name}
+				"${DOXYGEN_EXECUTABLE}" "${CMAKE_CURRENT_BINARY_DIR}/${p_documentation_target_name}/Doxyfile"
+				WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${p_documentation_target_name}"
+				COMMENT "Generating '${p_documentation_target_name}' documentation with Doxygen" VERBATIM)
+		
 		endif()
-
+	  
+	elseif(NOT ${GenerateDoxygenCC_QUIET}) 
+		if(${GenerateDoxygenCC_REQUIRED})
+			message(FATAL_ERROR "GenerateDoxygenDocumentation('${p_documentation_target_name}' '${p_preconfig_doxyfile}'): Could not find Doxygen.")
+		else()
+			message(WARNING "Doxygen documentation target wasn't added as Doxygen could not be found.")
+		endif()
 	endif()
 	
 endfunction()

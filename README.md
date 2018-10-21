@@ -103,5 +103,4 @@ The utilities are documented inplace inside the 'cmake' directory.
 - Remove DEPENDENCY_FILE option and rework as CONFIG_FILE option.
 - Add Testing
 - Improve argument error checking
-- Expand usage of BUILD_TYPE_REGEX option to all relate functions/macros. (Useful for single-configuration generators) 
 - Consider Export internal changes to support Export(PACKAGE) command.
