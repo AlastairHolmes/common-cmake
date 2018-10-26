@@ -75,7 +75,7 @@ Even if you don't use any of my utilities, here are some guidelines I have found
 	
 ## Usage
 
-I personally include these utilties in my projects by using 'find_package' (To avoid hard-coded paths, and so I don't have duplicates of these utilities all over my system), but it is more sensible to use 'include(common.cmake)'.
+I personally include these utilties in my projects by using a git-submodule and using 'include(${CMAKE_CURRENT_LIST_DIR}/ext/common-cmake/common.cmake)'. This makes building projects that use common-cmake seamless.
 
 ## Documentation
 
