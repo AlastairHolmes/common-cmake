@@ -5,7 +5,7 @@ A set of macros and functions to make using CMake easier. These are primarily fo
 
 There are a set of explained examples included in this project to demonstrate usage, in the 'examples' subdirectory. The example below shows how little code is required to correctly export a static library:
 
-```
+```cmake
 cmake_minimum_required(VERSION 3.9)
 project("SLIB")
 
